@@ -23,10 +23,17 @@ session = Session()
 #data_list = session.query(models.taxinfos).all()
 
 #按照一定条件查询数据
-data_list = session.query(models.taxinfos).filter(models.taxinfos.id>= 114)
+#data_list = session.query(models.taxinfos).filter(models.taxinfos.id>= 114)
 #print(data_list)
-for row in data_list:
-    print(row.companyName)
+#for row in data_list:
+#    print(row.companyName)
+
+
+#删除
+#session.query(models.taxinfos).filter(models.taxinfos.id>= 114).delete()
+
+#修改
+session.query(models.taxinfos).filter(models.taxinfos.id== 116).update({"id":"112"})
 # 提交事务
 session.commit()
 
