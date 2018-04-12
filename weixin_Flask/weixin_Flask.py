@@ -1,4 +1,5 @@
 from flask import Flask,render_template,request
+import s1
 app = Flask(__name__)
 
 
@@ -13,8 +14,22 @@ function_list = {
     4:{'action':'修改用户信息'},
     5:{'action':'添加公司信息'},
     6:{'action':'修改公司信息'}
+
 }
 
+@app.route("/change/查看用户信息",methods = ['GET', 'POST'])
+def change():
+    print (s1.select())
+    return render_template('change/查看用户信息.html')
+
+"""
+@app.route("/change/<string:str>",methods = ['GET', 'POST'])
+def change(str):
+    print(str)
+#    return str
+    str=
+    return render_template('change/str.html',)
+"""
 
 @app.route("/index",methods = ['GET', 'POST'])
 def index():

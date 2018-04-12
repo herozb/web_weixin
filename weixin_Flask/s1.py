@@ -18,22 +18,24 @@ session = Session()
 
 #obj2 = models.taxinfos(id="114",companyName="北京市朝阳区东四环中路财富国际金融中心",taxNumber="012345678987654321",address="北京市朝阳区中间财富中心22层",phone="010-88888888",bank="中国银行北京市分行",cardNo="564984416432")
 #session.add(obj2)
-
-#查询所有数据
-#data_list = session.query(models.taxinfos).all()
-
-#按照一定条件查询数据
-#data_list = session.query(models.taxinfos).filter(models.taxinfos.id>= 114)
-#print(data_list)
-#for row in data_list:
-#    print(row.companyName)
+def select():
+    #查询所有数据
+    data_list = session.query(models.userinfos).all()
+    print(data_list)
+    #按照一定条件查询数据
+    #data_list = session.query(models.taxinfos).filter(models.taxinfos.id>= 114)
+    #print(data_list)
+    for row in data_list:
+        ret = (row.id,row.phone,row.staffId,row.pwd)
+    #    print(row.id,row.phone,row.staffId,row.pwd)
+        print(ret)
 
 
 #删除
 #session.query(models.taxinfos).filter(models.taxinfos.id>= 114).delete()
 
 #修改
-session.query(models.taxinfos).filter(models.taxinfos.id== 116).update({"id":"112"})
+#session.query(models.taxinfos).filter(models.taxinfos.id== 116).update({"id":"112"})
 # 提交事务
 session.commit()
 

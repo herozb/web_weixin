@@ -24,7 +24,7 @@ class userinfos(Base):
 class taxinfos(Base):
     __tablename__ = 'taxinfos'
     id = Column(Integer, primary_key=True)
-    companyName = Column(String(50),uniqoue=True)
+    companyName = Column(String(50),unique=True)
     taxNumber = Column(String(18), unique=True)
     address = Column(String(100), unique=True)
     phone = Column(String(15), unique=True)
