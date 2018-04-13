@@ -1,7 +1,9 @@
-from flask import Flask,render_template,request
-import s1
-app = Flask(__name__)
+from flask import Flask,render_template,request,redirect,session,send_file
+import db
+import models
 
+app = Flask(__name__)
+app.secret_key = "123456"
 
 #@app.route("/")
 #def index():
@@ -19,8 +21,15 @@ function_list = {
 
 @app.route("/change/查看用户信息",methods = ['GET', 'POST'])
 def change():
-    print (s1.select())
-    return render_template('change/查看用户信息.html')
+    date_all = db.conn.query(models.taxinfos).all()
+#    data = date_all()
+#    print(date_all)
+    for row in date_all:
+        return render_template("change/查看用户信息.html",date=(row.companyName,row.taxNumber))
+        #    print(row.id,row.companyName,row.taxNumber,row.address,row.phone,row.bank,row.cardNo)
+
+#    return render_template('change/查看用户信息.html')
+
 
 """
 @app.route("/change/<string:str>",methods = ['GET', 'POST'])
@@ -40,12 +49,19 @@ def login():
     if request.method == "GET":
         return render_template('login.html')
     else:
-        user = request.form.get('user')
-        pwd = request.form.get('pwd')
-        if user=="zhangbing" and pwd=="123":
-            return render_template('index.html')
+        user_input = request.form.get('user')
+        pwd_input = request.form.get('pwd')
+        user = db.conn.query(models.webuser).filter(models.webuser.username == user_input).first()
+        if user:
+            passwd = db.conn.query(models.webuser).filter(models.webuser.password == pwd_input).first()
+            if passwd:
+                session['user'] = user_input
+#                session.permanent = True
+                return render_template("index.html",user_dict=function_list)
+            else:
+                return "用户名或密码错误"
         else:
-            return "<h1>login Failure !</h1>"
+            return "登陆失败  %s用户不存在!" %(user_input)
 
 
 

@@ -5,6 +5,17 @@ from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Uniq
 
 Base = declarative_base()
 
+class webuser(Base):
+    __tablename__ = 'webuser'
+
+    username = Column(String(15), primary_key=True)
+    password = Column(String(15), unique=True)
+
+    __table_args__ = (
+        # UniqueConstraint('id', 'name', name='uix_id_name'),
+        # Index('ix_id_name', 'name', 'email'),
+    )
+
 
 class userinfos(Base):
     __tablename__ = 'userinfos'
