@@ -1,28 +1,32 @@
-from flask import Flask,render_template,request,redirect,session,url_for
+from flask import Flask,render_template,request,redirect,session,send_file
 import db
 import models
 
-app = Flask(__name__)
-app.secret_key = "tttttrrrrr"
-
-@app.route("/login",methods = ['GET', 'POST'])
-def login():
-    if request.method == "GET":
-        return render_template('login.html')
-    else:
-        user_input = request.form.get('user')
-        pwd_input = request.form.get('pwd')
-        user = db.conn.query(models.webuser).filter(models.webuser.username == user_input).first()
-        if user:
-            passwd = db.conn.query(models.webuser).filter(models.webuser.password == pwd_input).first()
-            if passwd:
-                session['user'] = user_input
-#                session.permanent = True
-                return "123"
-            else:
-                return "用户名或密码错误"
-        else:
-            return "<h1>login Failure 用户不存在!</h1>"
-
-if __name__ == '__main__':
-    app.run()
+class AlchemyJsonEncoder(json.JSONEncoder):
+    def default(self, obj):
+        # 判断是否是Query
+        if isinstance(obj, Query):
+            # 定义一个字典数组
+            fields = []
+            # 定义一个字典对象
+            record = {}
+            # 检索结果集的行记录
+            for rec in obj.all():
+                # 检索记录中的成员
+                for field in [x for x in dir(rec) if
+                              # 过滤属性
+                              not x.startswith('_')
+                              # 过滤掉方法属性
+                              and hasattr(rec.__getattribute__(x), '__call__') == False
+                              # 过滤掉不需要的属性
+                              and x != 'metadata']:
+                    data = rec.__getattribute__(field)
+                    try:
+                        record[field] = data
+                    except TypeError:
+                        record[field] = None
+                fields.append(record)
+            # 返回字典数组
+            return fields
+        # 其他类型的数据按照默认的方式序列化成JSON
+        return json.JSONEncoder.default(self, obj)
