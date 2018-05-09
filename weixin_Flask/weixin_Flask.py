@@ -20,7 +20,7 @@ function_list = {
 
 }
 
-
+# 获取json串
 from sqlalchemy.ext.declarative import DeclarativeMeta
 class AlchemyEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -64,6 +64,24 @@ def change():
     return render_template("change/查看用户信息.html", data=json2python)
 
 
+@app.route("/change/添加用户信息",methods = ['GET', 'POST'])
+def add_user():
+    if request.method == "GET":
+        return render_template('change/添加用户信息.html')
+    else:
+        phone_input = request.form.get('phone')
+        oaid_input = request.form.get('oaid')
+        pwd_input = request.form.get('pwd')
+        old_id = db.conn.query(models.userinfos).order_by(models.userinfos.id.desc()).first()
+        new_id = (old_id.id)
+        new_id += 1
+        print(phone_input,oaid_input,pwd_input,new_id)
+        add_sql = models.userinfos(id=new_id,phone=phone_input,staffId=oaid_input,pwd=pwd_input)
+#        add_sql = models.userinfos(id="814", phone="15648456654", staffId="78945", pwd="123456")
+        db.conn.add(add_sql)
+        db.conn.commit()
+        return render_template('change/添加用户成功.html')
+#    return render_template("change/添加用户信息.html")
 
 
 """
