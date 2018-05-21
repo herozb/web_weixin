@@ -5,6 +5,7 @@ from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Uniq
 
 Base = declarative_base()
 
+#创建数据模型
 class webuser(Base):
     __tablename__ = 'webuser'
 

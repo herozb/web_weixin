@@ -49,19 +49,24 @@ class AlchemyEncoder(json.JSONEncoder):
 date_all = db.conn.query(models.taxinfos).all()
 data = json.dumps(date_all, cls=AlchemyEncoder)
 json2python = json.loads(data)
-print(json2python)
-for i in json2python:
-    print(type(i))
-#data=json.dumps(date_all, cls=AlchemyEncoder)
-#date_all = db.conn.query(models.taxinfos).all()
-#for row in date_all:
-#    ret = (row.id, row.companyName, row.taxNumber, row.address, row.phone, row.bank, row.cardNo)
-#    data = json.dumps(ret, cls=AlchemyEncoder)
-#    json2python = json.loads(data)
+
 @app.route("/change/查看用户信息",methods = ['GET', 'POST'])
 def change():
 
     return render_template("change/查看用户信息.html", data=json2python)
+
+#修改用户信息
+@app.route("/change/修改用户信息",methods = ['GET','POST'])
+def change_user():
+    if request.method == "GET":
+        return render_template('change/修改用户信息.html')
+    else:
+        oaid_input = request.form.get('oaid')
+        user_info=db.conn.query(models.userinfos).filter(models.userinfos.staffId == oaid_input).all()
+        for row in user_info:
+            cha_user=(row.phone, row.staffId, row.pwd)
+
+
 
 #添加公司信息模块
 @app.route("/change/添加公司信息",methods = ['GET', 'POST'])
@@ -83,11 +88,6 @@ def add_company():
         db.conn.add(add_sql)
         db.conn.commit()
         db.conn.close()
-#        check_id=db.conn.query(models.taxinfos).order_by(models.taxinfos.id.desc()).first()
-#        check_id_new=(check_id.id)
-#        print(check_id_new)
-#        if check_id_new == new_id:
- #       return render_template('change/添加公司成功.html')
         flash('You were successfully add')
         return redirect('change/添加公司成功.html')
 #        else:
@@ -113,15 +113,6 @@ def add_user():
         return render_template('change/添加用户成功.html')
 #    return render_template("change/添加用户信息.html")
 
-
-"""
-@app.route("/change/<string:str>",methods = ['GET', 'POST'])
-def change(str):
-    print(str)
-#    return str
-    str=
-    return render_template('change/str.html',)
-"""
 
 #功能选择模块
 @app.route("/index",methods = ['GET', 'POST'])
